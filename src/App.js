@@ -1,9 +1,9 @@
-import './App.css';
+import TemplateCard from './components/TemplateCard/TemplateCard';
 
 function App() {
   return (
     <div className="App">
-      Site is under construction...
+      <TemplateCard />
     </div>
   );
 }
