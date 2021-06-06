@@ -1,77 +1,86 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './TemplateCard.css';
-import axios from 'axios';
 import Loader from 'react-loader-spinner';
+// import Pagination from './Pagination/Pagination'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
-const TemplateCard = () => {
+const TemplateCard = ({
+    // searchText,
+    // handleChange,
+    template,
+    loading,
+}) => {
 
-const [template, setTemplate] = useState([]);
-const [loading, setLoading] = useState(true);
 
-const [searchText, setSearchText] = useState('');
-const [templatelist, setTemplateList] = useState(template);
+    // state for pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 24;
 
-const handleChange = (e) => {
-    setSearchText(e)
-}
+    const maxPageLimit = 1;
+    const minPageLimit = 0;
 
-const filteredTemplate = () => {
+  const handleClick = (event) => {
+      setCurrentPage(Number(event.target.id));
+  }
 
-}
-useEffect(() => {
-    const getTemplate = async () => {
-        try {
-            const resp = await axios.get('https://front-end-task-dot-fpls-dev.uc.r.appspot.com/api/v1/public/task_templates');
-            console.log(resp);
-            const allTemplates = resp.data;
-            setLoading(false);
-            setTemplate(allTemplates);
-        } catch (error) {
-            console.log(error);
-        }
-};
-getTemplate();
-}, []);
+  const pages = [];
+    for ( let i = 1; i <= Math.ceil(template.length / itemsPerPage); i++) {
+        pages.push(i);
+    }
 
+    const handleNext = () => {
+        setCurrentPage(currentPage + 1);
+    }
+    const handlePrevious = () => {
+        setCurrentPage(currentPage - 1);
+    }
+
+    const numOfPages = Math.round(template.length / 24);
+    const indexOfLastitem = currentPage * itemsPerPage;
+    const indexOfFirstitem = indexOfLastitem - itemsPerPage;
+    const currentItem = template.slice(indexOfFirstitem, indexOfLastitem);
+    
     return (
         <div className='container'>
-            <div className='searchbar'>
+            <div className='searchbar'> 
                 <div className='search-container'>
                     <input
                         type='text'
                         placeholder='search Templates...'
-                        onChange={(event)=> handleChange(event.target.value)}
                     />
                 </div>
                 <div className='select'>
                     <span className='gap'> Sort By: </span>
                     <select name='category' className='category gap'>
                         <option value='all'>All</option>
-                        <option value='agriculture'>Agriculture</option>
+                        <option value='health'>Health</option>
                         <option value='education'>Education</option>
-                        <option value='commerce'>Commerce</option>
+                        <option value='ecommerce'>E-commerce</option>
                     </select>
                     <select name='category' className='category gap'>
-                        <option value='all'>Default </option>
-                        <option value='agriculture'>Ascending</option>
-                        <option value='education'>Descending</option>
+                        <option value='default'>Default </option>
+                        <option value='ascending'>Ascending</option>
+                        <option value='descending'>Descending</option>
                     </select>
                     <select name='category' className='category'>
-                        <option value='all'>Default </option>
-                        <option value='agriculture'>Ascending</option>
-                        <option value='education'>Descending</option>
+                        <option value='default'>Default </option>
+                        <option value='ascending'>Ascending</option>
+                        <option value='descending'>Descending</option>
                     </select>
                 </div>
             </div>
             <div className='warning-alert'>
                 <span> Tada! Get started with afree template. Can't find what you are looking for? Search from the 1000+ available templates</span>
             </div>
+            <div className='searchbar'>
+                <span className='search-container'>All Templates</span>
+                <span className='select'>{template.length} templates</span>
+            </div>
             <div>
                 {loading 
                     ? <Loader type="ThreeDots" className='loader' /> 
                     : <div className='grid-container'>
-                        {template.splice(0, 24).map((items) =>  {
+                        {currentItem.map((items) =>  {
                         return (
                             <div className='gridItem'>
                                 <div className='card'>
@@ -86,6 +95,36 @@ getTemplate();
                             </div>
                         );
                         })}
+                        <div className='pagination'>
+                                <button
+                                    className='btn'
+                                    onClick={handlePrevious}
+                                    disabled={currentPage === pages[0] ? true : false}
+                                >
+                                    Previous
+                                </button>
+                                {pages.map(number => {
+                                    if( number < maxPageLimit +1 && number > minPageLimit) {
+                                    return(
+                                        <ul className='pageNumbers'>
+                                            <li id={number} onClick={handleClick}>
+                                                {currentPage}
+                                                <span> of {numOfPages}</span>
+                                            </li>
+                                        </ul>
+                                    )
+                                    } else {
+                                        return null;
+                                    }
+                                })}
+                                <button
+                                    className='btn'
+                                    onClick={handleNext}
+                                    disabled={currentPage === numOfPages ? true : false}
+                                >
+                                    Next
+                                </button>
+                            </div>
                     </div>
                 }
             </div>
