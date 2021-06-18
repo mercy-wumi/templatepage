@@ -1,17 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import './TemplateCard.css';
 import Loader from 'react-loader-spinner';
-// import Pagination from './Pagination/Pagination'
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import Pagination from '../Pagination/Pagination';
+import Filters from '../Filters/Filters';
+import { fetchTemplates } from '../../store/action';
 
 const TemplateCard = ({
-    // searchText,
-    // handleChange,
-    template,
+    fetchTemplates,
     loading,
+    template,
+    // error
 }) => {
 
-
+    useEffect(()=> {
+        fetchTemplates()
+    }, []);
     // state for pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 24;
@@ -42,35 +47,9 @@ const TemplateCard = ({
     
     return (
         <div className='container'>
-            <div className='searchbar'> 
-                <div className='search-container'>
-                    <input
-                        type='text'
-                        placeholder='search Templates...'
-                    />
-                </div>
-                <div className='select'>
-                    <span className='gap'> Sort By: </span>
-                    <select name='category' className='category gap'>
-                        <option value='all'>All</option>
-                        <option value='health'>Health</option>
-                        <option value='education'>Education</option>
-                        <option value='ecommerce'>E-commerce</option>
-                    </select>
-                    <select name='category' className='category gap'>
-                        <option value='default'>Default </option>
-                        <option value='ascending'>Ascending</option>
-                        <option value='descending'>Descending</option>
-                    </select>
-                    <select name='category' className='category'>
-                        <option value='default'>Default </option>
-                        <option value='ascending'>Ascending</option>
-                        <option value='descending'>Descending</option>
-                    </select>
-                </div>
-            </div>
+            <Filters />
             <div className='warning-alert'>
-                <span> Tada! Get started with afree template. Can't find what you are looking for? Search from the 1000+ available templates</span>
+                <span> Tada! Get started with a free template. Can't find what you are looking for? Search from the 1000+ available templates</span>
             </div>
             <div className='searchbar'>
                 <span className='search-container'>All Templates</span>
@@ -95,36 +74,16 @@ const TemplateCard = ({
                             </div>
                         );
                         })}
-                        <div className='pagination'>
-                                <button
-                                    className='btn'
-                                    onClick={handlePrevious}
-                                    disabled={currentPage === pages[0] ? true : false}
-                                >
-                                    Previous
-                                </button>
-                                {pages.map(number => {
-                                    if( number < maxPageLimit +1 && number > minPageLimit) {
-                                    return(
-                                        <ul className='pageNumbers'>
-                                            <li id={number} onClick={handleClick}>
-                                                {currentPage}
-                                                <span> of {numOfPages}</span>
-                                            </li>
-                                        </ul>
-                                    )
-                                    } else {
-                                        return null;
-                                    }
-                                })}
-                                <button
-                                    className='btn'
-                                    onClick={handleNext}
-                                    disabled={currentPage === numOfPages ? true : false}
-                                >
-                                    Next
-                                </button>
-                            </div>
+                        <Pagination
+                            maxPageLimit={maxPageLimit}
+                            minPageLimit={minPageLimit}
+                            numOfPages={numOfPages}
+                            handlePrevious={handlePrevious}
+                            handleNext={handleNext}
+                            handleClick={handleClick}
+                            pages={pages}
+                            currentPage={currentPage}
+                        />
                     </div>
                 }
             </div>
@@ -132,4 +91,18 @@ const TemplateCard = ({
     );
 }
 
-export default TemplateCard;
+const mapStateToProps = (state) => {
+    return {
+        loading: state.loading,
+        template: state.template,
+        error: state.error
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetchTemplates: () => dispatch(fetchTemplates())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TemplateCard);
