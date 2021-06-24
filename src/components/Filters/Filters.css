@@ -1,0 +1,73 @@
+.searchbar {
+  /* height: 50px; */
+  padding-left: 30px;
+  padding-right: 30px;
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: 2fr 4fr;
+  grid-template-rows: 50px;
+}
+.select {
+  /* float: right; */
+  margin-left: auto;
+  /* display: flex;
+  margin-left: auto;
+  justify-content: flex-end; */
+}
+.category {
+  font-size: 15px;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+.gap {
+  margin-right: 20px;
+}
+
+.search-container {
+  float: left;
+}
+.search-container input[type="text"] {
+  width: 100%;
+  font-size: 15px;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+@media screen and (max-width: 900px) {
+  .search-container {
+    grid-column: 1 /-1;
+  }
+  .select {
+    grid-column: 1 /-1;
+    margin-left: 0px;
+  }
+  .spaceAround {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .search-container {
+    grid-column: 1 /-1;
+  }
+  .select {
+    grid-column: 1 /-1;
+    margin-left: 0px;
+  }
+  .spaceAround {
+    display: grid;
+    /* grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); */
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .search-container {
+    grid-column: 1 /-1;
+  }
+  .spaceAround {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}

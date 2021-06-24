@@ -2,7 +2,9 @@ import axios from 'axios';
 import {
     FETCH_TEMPLATE_ERROR,
     FETCH_TEMPLATE_REQUEST,
-    FETCH_TEMPLATE_SUCCESS
+    FETCH_TEMPLATE_SUCCESS,
+    FILTERED_CATEGORY,
+    FILTER_HANDLER
 } from './actionTypes'
 
 const fetchRequest = () => {
@@ -18,6 +20,20 @@ const fetchSuccess = (template) => {
     }
 }
 
+const categoryFilter = (filteredCategory) => {
+    return {
+        type: FILTERED_CATEGORY,
+        payload: filteredCategory
+    }
+}
+
+export const filterHandler = (category) => {
+    return {
+        type: FILTER_HANDLER,
+        payload: category,
+    }
+}
+
 const fetchError = (error) => {
     return {
         type: FETCH_TEMPLATE_ERROR,
@@ -29,9 +45,11 @@ export const fetchTemplates = () => {
     return (dispatch) => {
         dispatch(fetchRequest)
         axios.get('https://front-end-task-dot-fpls-dev.uc.r.appspot.com/api/v1/public/task_templates')
-            .then( resp => {
+            .then(resp => {
                 const allTemplates = resp.data;
+                console.log(allTemplates);
                 dispatch(fetchSuccess(allTemplates))
+                // dispatch(storeCategory(allTemplates.category))
             })
             .catch(error => {
                 const errorMsg = error.message;
