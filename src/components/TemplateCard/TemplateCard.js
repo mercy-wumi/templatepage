@@ -23,6 +23,7 @@ const TemplateCard = ({
     // state for pagination
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState('');
+    const [category, setCategory] = useState('');
     const [filteredData, setFilteredData] = useState([]);
     const itemsPerPage = 24;
 
@@ -39,6 +40,39 @@ const TemplateCard = ({
         // eslint-disable-next-line
     }, [search, templateData]);
 
+    // useEffect(() => {
+    //     categoryFilter()
+    //     eslint-disable-next-line
+    // }, [category, templateData]);
+
+    const categoryHandler = () => {
+        switch (category) {
+            case 'health':
+                setFilteredData(templateData && templateData.filter((filteredTemplate) =>
+                filteredTemplate.category.filter((categories) => categories.includes("health"))));
+                console.log(templateData)
+                break;
+            case 'education':
+                setFilteredData(templateData && templateData.filter((filteredTemplate) =>
+                filteredTemplate.category.filter((categories) => categories === 'education')));
+                break;
+            case 'ecommerce':
+                setFilteredData(templateData && templateData.filter((filteredTemplate) =>
+                filteredTemplate.category.filter((categories) => categories === 'ecommerce')));
+                break;
+            default:
+                setFilteredData(templateData);
+        }
+    }
+    
+    console.log(category)
+    // console.log(templateData[0].category)
+
+    useEffect(() => {
+        categoryHandler()
+        // eslint-disable-next-line
+    }, [category, templateData]);
+
     const handleChange = (e) => {
         setSearch(e.target.value)
     };
@@ -47,10 +81,14 @@ const TemplateCard = ({
         setCurrentPage(Number(event.target.id));
     }
 
+    const filterHandler = (e) => {
+        setCategory(e.target.value);
+    }
     const pages = [];
-    for (let i = 1; i <= Math.ceil(templateData && templateData.length / itemsPerPage); i++) {
+    for (let i = 1; i <= Math.ceil(filteredData && filteredData.length / itemsPerPage); i++) {
         pages.push(i);
     }
+    console.log(filteredData)
 
     const handleNext = () => {
         setCurrentPage(currentPage + 1);
@@ -59,7 +97,7 @@ const TemplateCard = ({
         setCurrentPage(currentPage - 1);
     }
 
-    const numOfPages = Math.round(templateData && templateData.length / 24);
+    const numOfPages = Math.round(filteredData && filteredData.length / 24);
     // const indexOfLastitem = currentPage * itemsPerPage;
     // const indexOfFirstitem = indexOfLastitem - itemsPerPage;
     // const currentItem = templateData && templateData.slice(indexOfFirstitem, indexOfLastitem);
@@ -69,20 +107,21 @@ const TemplateCard = ({
         <div className='container'>
             <Filters
                 handleChange={handleChange}
+                filterHandler={filterHandler}
             />
             <div className='warning-alert'>
                 <span> Tada! Get started with a free template. Can't find what you are looking for? Search from the 1000+ available templates</span>
             </div>
             <div className='searchbar'>
                 <span className='search-container'>All Templates</span>
-                <span className='select'>{templateData && templateData.length} templates</span>
+                <span className='select'>{filteredData && filteredData.length} templates</span>
             </div>
             <div>
                 {loading
                     ? <Loader type="ThreeDots" className='loader' />
                     : <div>
                         <div className='grid-container'>
-                            {filteredData && filteredData.slice(0, 24).map((items) => {
+                            {filteredData && filteredData.slice(0, itemsPerPage).map((items) => {
                                 {/* {templateData && templateData.slice(0, 24).map((items) => { */ }
                                 return (
                                     <div className='gridItem'>
@@ -122,7 +161,8 @@ const mapStateToProps = (state) => {
     return {
         loading: state.loading,
         templateData: state.template,
-        error: state.error
+        error: state.error,
+        // category: state.category
     }
 }
 

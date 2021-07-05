@@ -3,8 +3,8 @@ import {
     FETCH_TEMPLATE_ERROR,
     FETCH_TEMPLATE_REQUEST,
     FETCH_TEMPLATE_SUCCESS,
-    FILTERED_CATEGORY,
-    FILTER_HANDLER
+    // FILTERED_CATEGORY,
+    // FILTER_HANDLER
 } from './actionTypes'
 
 const fetchRequest = () => {
@@ -20,19 +20,19 @@ const fetchSuccess = (template) => {
     }
 }
 
-const categoryFilter = (filteredCategory) => {
-    return {
-        type: FILTERED_CATEGORY,
-        payload: filteredCategory
-    }
-}
+// const categoryFilter = (filteredCategory) => {
+//     return {
+//         type: FILTERED_CATEGORY,
+//         payload: filteredCategory
+//     }
+// }
 
-export const filterHandler = (category) => {
-    return {
-        type: FILTER_HANDLER,
-        payload: category,
-    }
-}
+// export const filterHandler = (category) => {
+//     return {
+//         type: FILTER_HANDLER,
+//         payload: category,
+//     }
+// }
 
 const fetchError = (error) => {
     return {
@@ -57,3 +57,24 @@ export const fetchTemplates = () => {
             })
     }
 }
+
+// export const categoryFilter = (filteredCategory, template, category) => {
+//     return (dispatch) => {
+//         switch (category) {
+//             case "health":
+//                 filteredCategory(template.filter((filteredTemplate) =>
+//                 filteredTemplate.health === true));
+//                 break;
+//             case "education":
+//                 filteredCategory(template.filter((filteredTemplate) =>
+//                 filteredTemplate.education === true));
+//                 break;
+//             case "ecommerce":
+//                 filteredCategory(template.filter((filteredTemplate) =>
+//                 filteredTemplate.ecommerce === true));
+//                 break;
+//             default:
+//                 filteredCategory(template);
+//         }
+//     }
+// }

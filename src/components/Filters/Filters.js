@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import './Filters.css';
-import { filterHandler } from '../../store/action';
+// import { filterHandler } from '../../store/action';
 
 const Filters = ({ filterHandler, handleChange }) => {
     return (
@@ -38,10 +38,10 @@ const Filters = ({ filterHandler, handleChange }) => {
     )
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        filterHandler: (e) => dispatch(filterHandler(e.target.value))
-    }
-}
+// const mapDispatchToProps = (dispatch) => {
+//     return {
+//         filterHandler: (e) => dispatch(filterHandler(e.target.value))
+//     }
+// }
 
-export default connect(null, mapDispatchToProps)(Filters);
+export default Filters;
